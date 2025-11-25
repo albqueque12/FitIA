@@ -72,7 +72,7 @@ const UserRegistration = ({ onUserCreated }) => {
         teste_5km_rpe: parseInt(formData.teste_5km_rpe)
       }
 
-      const response = await fetch('${API_BASE_URL}/users', {
+      const response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
