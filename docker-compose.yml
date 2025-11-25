@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: fitia-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fitia_db
+      POSTGRES_USER: fitia_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fitia_user -d fitia_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Flask Backend + Frontend
+  web:
+    build: .
+    container_name: fitia-web
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://fitia_user:${DB_PASSWORD:-changeme}@db:5432/fitia_db
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+      - FLASK_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./database:/app/database
+
+volumes:
+  postgres_data:
