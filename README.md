@@ -1,4 +1,4 @@
-# ExFit - Treinos Personalizados com IA 🏃‍♂️
+# FitAI - Treinos Personalizados com IA 🏃‍♂️
 
 > Aplicação revolucionária de fitness que utiliza Inteligência Artificial para gerar treinos personalizados e adaptativos.
 
@@ -9,7 +9,7 @@
 
 ## 🎯 Visão Geral
 
-O ExFit melhora a qualidade de vida e performance através de treinos baseados em condições fisiológicas, desenvolvendo capacidades anaeróbica e aeróbica com planos gerados por inteligência artificial adaptativa.
+O FitAI melhora a qualidade de vida e performance através de treinos baseados em condições fisiológicas, desenvolvendo capacidades anaeróbica e aeróbica com planos gerados por inteligência artificial adaptativa.
 
 ## ✨ Funcionalidades
 
