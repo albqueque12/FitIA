@@ -16,6 +16,7 @@ const TrainingPlan = ({ user }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedWorkout, setSelectedWorkout] = useState(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [completionData, setCompletionData] = useState({
     rpe_realizado: '',
     fc_media: '',
@@ -65,6 +66,11 @@ const TrainingPlan = ({ user }) => {
   }
 
   const completeWorkout = async () => {
+    if (!selectedWorkout || !selectedWorkout.id) {
+      setError('Nenhum treino selecionado')
+      return
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/workouts/${selectedWorkout.id}/complete`, {
         method: 'POST',
@@ -84,6 +90,7 @@ const TrainingPlan = ({ user }) => {
       }
       
       // Resetar dados e fechar dialog
+      setDialogOpen(false)
       setSelectedWorkout(null)
       setCompletionData({ rpe_realizado: '', fc_media: '', tempo_realizado: '' })
       
@@ -306,12 +313,21 @@ const TrainingPlan = ({ user }) => {
                           </p>
                         </div>
                         {!workout.completed && (
-                          <Dialog>
+                          <Dialog open={dialogOpen && selectedWorkout?.id === workout.id} onOpenChange={(open) => {
+                            setDialogOpen(open)
+                            if (!open) {
+                              setSelectedWorkout(null)
+                              setCompletionData({ rpe_realizado: '', fc_media: '', tempo_realizado: '' })
+                            }
+                          }}>
                             <DialogTrigger asChild>
                               <Button 
                                 size="sm" 
                                 className="w-full mt-3"
-                                onClick={() => setSelectedWorkout(workout)}
+                                onClick={() => {
+                                  setSelectedWorkout(workout)
+                                  setDialogOpen(true)
+                                }}
                               >
                                 <Play className="h-4 w-4 mr-1" />
                                 Completar

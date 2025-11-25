@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
 import { Alert, AlertDescription } from '@/components/ui/alert.jsx'
 import { Target, Calendar, TrendingUp, Clock, Activity, Zap } from 'lucide-react'
+import { API_BASE_URL } from '../config'
 
 const Dashboard = ({ user }) => {
   const [progress, setProgress] = useState(null)
