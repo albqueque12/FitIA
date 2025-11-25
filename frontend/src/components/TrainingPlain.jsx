@@ -73,18 +73,26 @@ const TrainingPlan = ({ user }) => {
         },
         body: JSON.stringify({
           rpe_realizado: parseInt(completionData.rpe_realizado),
-          fc_media: parseFloat(completionData.fc_media),
-          tempo_realizado: parseFloat(completionData.tempo_realizado)
+          fc_media: parseFloat(completionData.fc_media) || null,
+          tempo_realizado: parseFloat(completionData.tempo_realizado) || null
         }),
       })
       
-      if (!response.ok) throw new Error('Erro ao marcar treino como completo')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Erro ao marcar treino como completo')
+      }
       
+      // Resetar dados e fechar dialog
       setSelectedWorkout(null)
       setCompletionData({ rpe_realizado: '', fc_media: '', tempo_realizado: '' })
-      fetchTrainingPlans()
+      
+      // Recarregar planos para mostrar treino completado
+      await fetchTrainingPlans()
+      
     } catch (err) {
       setError(err.message)
+      console.error('Erro ao completar treino:', err)
     }
   }
 
