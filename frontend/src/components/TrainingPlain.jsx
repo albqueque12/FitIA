@@ -15,8 +15,6 @@ const TrainingPlan = ({ user }) => {
   const [trainingPlans, setTrainingPlans] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [selectedWorkout, setSelectedWorkout] = useState(null)
-  const [dialogOpen, setDialogOpen] = useState(false)
   const [completionData, setCompletionData] = useState({
     rpe_realizado: '',
     fc_media: '',
@@ -65,14 +63,14 @@ const TrainingPlan = ({ user }) => {
     }
   }
 
-  const completeWorkout = async () => {
-    if (!selectedWorkout || !selectedWorkout.id) {
-      setError('Nenhum treino selecionado')
+  const completeWorkout = async (workoutId) => {
+    if (!workoutId) {
+      setError('ID do treino não encontrado')
       return
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/workouts/${selectedWorkout.id}/complete`, {
+      const response = await fetch(`${API_BASE_URL}/workouts/${workoutId}/complete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,17 +87,18 @@ const TrainingPlan = ({ user }) => {
         throw new Error(errorData.error || 'Erro ao marcar treino como completo')
       }
       
-      // Resetar dados e fechar dialog
-      setDialogOpen(false)
-      setSelectedWorkout(null)
+      // Resetar dados
       setCompletionData({ rpe_realizado: '', fc_media: '', tempo_realizado: '' })
       
       // Recarregar planos para mostrar treino completado
       await fetchTrainingPlans()
       
+      return true
+      
     } catch (err) {
       setError(err.message)
       console.error('Erro ao completar treino:', err)
+      return false
     }
   }
 
@@ -313,21 +312,11 @@ const TrainingPlan = ({ user }) => {
                           </p>
                         </div>
                         {!workout.completed && (
-                          <Dialog open={dialogOpen && selectedWorkout?.id === workout.id} onOpenChange={(open) => {
-                            setDialogOpen(open)
-                            if (!open) {
-                              setSelectedWorkout(null)
-                              setCompletionData({ rpe_realizado: '', fc_media: '', tempo_realizado: '' })
-                            }
-                          }}>
+                          <Dialog>
                             <DialogTrigger asChild>
                               <Button 
                                 size="sm" 
                                 className="w-full mt-3"
-                                onClick={() => {
-                                  setSelectedWorkout(workout)
-                                  setDialogOpen(true)
-                                }}
                               >
                                 <Play className="h-4 w-4 mr-1" />
                                 Completar
@@ -376,9 +365,17 @@ const TrainingPlan = ({ user }) => {
                                     onChange={(e) => setCompletionData(prev => ({...prev, tempo_realizado: e.target.value}))}
                                   />
                                 </div>
-                                <Button onClick={completeWorkout} className="w-full">
+                                <Button 
+                                  onClick={async () => {
+                                    const success = await completeWorkout(workout.id)
+                                    if (success) {
+                                      // Dialog fecha automaticamente pois o componente rerenderiza
+                                    }
+                                  }} 
+                                  className="w-full"
+                                >
                                   <CheckCircle className="h-4 w-4 mr-2" />
-                                  Marcar como Completo
+                                  Confirmar
                                 </Button>
                               </div>
                             </DialogContent>
