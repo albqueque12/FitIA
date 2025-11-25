@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx'
 import { Activity, Target, Calendar, TrendingUp, User, Settings } from 'lucide-react'
-import UserRegistration from './components/UserRegistration'
-import Dashboard from './components/Dashboard'
-import TrainingPlan from './components/TrainingPlan'
-import Progress from './components/Progress'
-import './App.css'
+import UserRegistration from './UserRegistration'
+import Dashboard from './Dashboard'
+import TrainingPlan from './TrainingPlain'
+import Progress from './Progress'
+import '../App.css'
 
 function App() {
   const [user, setUser] = useState(null)
