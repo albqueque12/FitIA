@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea.jsx'
 import { Alert, AlertDescription } from '@/components/ui/alert.jsx'
 import { Loader2, User, Target, Activity } from 'lucide-react'
+import { API_BASE_URL } from '../config'
 
 const UserRegistration = ({ onUserCreated }) => {
   const [formData, setFormData] = useState({
@@ -71,7 +72,7 @@ const UserRegistration = ({ onUserCreated }) => {
         teste_5km_rpe: parseInt(formData.teste_5km_rpe)
       }
 
-      const response = await fetch('http://localhost:5000/api/users', {
+      const response = await fetch('${API_BASE_URL}/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

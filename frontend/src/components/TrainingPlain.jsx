@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label.jsx'
 import { Textarea } from '@/components/ui/textarea.jsx'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.jsx'
 import { Calendar, Play, CheckCircle, Clock, Target, Plus, MessageSquare } from 'lucide-react'
+import { API_BASE_URL } from '../config'
 
 const TrainingPlan = ({ user }) => {
   const [trainingPlans, setTrainingPlans] = useState([])
@@ -34,7 +35,7 @@ const TrainingPlan = ({ user }) => {
 
   const fetchTrainingPlans = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${user.user.id}/training-plans`)
+      const response = await fetch(`${API_BASE_URL}/users/${user.user.id}/training-plans`)
       if (!response.ok) throw new Error('Erro ao carregar planos')
       
       const data = await response.json()
@@ -48,7 +49,7 @@ const TrainingPlan = ({ user }) => {
 
   const generateWeekPlan = async (weekNumber) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${user.user.id}/training-plan/${weekNumber}`, {
+      const response = await fetch(`${API_BASE_URL}/users/${user.user.id}/training-plan/${weekNumber}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +66,7 @@ const TrainingPlan = ({ user }) => {
 
   const completeWorkout = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/workouts/${selectedWorkout.id}/complete`, {
+      const response = await fetch(`${API_BASE_URL}/workouts/${selectedWorkout.id}/complete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +90,7 @@ const TrainingPlan = ({ user }) => {
 
   const submitFeedback = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${user.user.id}/feedback`, {
+      const response = await fetch(`${API_BASE_URL}/users/${user.user.id}/feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

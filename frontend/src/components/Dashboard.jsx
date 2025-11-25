@@ -17,8 +17,8 @@ const Dashboard = ({ user }) => {
 
   const fetchProgress = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${user.user.id}/progress`)
-      if (!response.ok) throw new Error('Erro ao carregar progresso')
+      const response = await fetch(`${API_BASE_URL}/users/${user.user.id}/progress`)
+      if (!response.ok) throw new Error('Erro ao buscar progresso')
       
       const data = await response.json()
       setProgress(data)
@@ -37,7 +37,7 @@ const Dashboard = ({ user }) => {
 
   const generateFirstWeekPlan = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${user.user.id}/training-plan/1`, {
+      const response = await fetch(`${API_BASE_URL}/users/${user.user.id}/training-plan/1`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

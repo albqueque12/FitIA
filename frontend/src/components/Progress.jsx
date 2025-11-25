@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge.jsx'
 import { Alert, AlertDescription } from '@/components/ui/alert.jsx'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 import { TrendingUp, Target, Calendar, Activity, Clock, Zap } from 'lucide-react'
+import { API_BASE_URL } from '../config'
 
 const Progress = ({ user }) => {
   const [progress, setProgress] = useState(null)
@@ -17,7 +18,7 @@ const Progress = ({ user }) => {
 
   const fetchProgress = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${user.user.id}/progress`)
+      const response = await fetch(`${API_BASE_URL}/users/${user.user.id}/progress`)
       if (!response.ok) throw new Error('Erro ao carregar progresso')
       
       const data = await response.json()
