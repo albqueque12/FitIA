@@ -6,12 +6,14 @@ services:
     region: oregon
     plan: free
     branch: main
-    buildCommand: "./scripts/build.sh"
+    buildCommand: "chmod +x scripts/build.sh && scripts/build.sh"
     startCommand: "gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 main:app"
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: NODE_VERSION
+        value: 18.18.0
       - key: SECRET_KEY
         generateValue: true
       - key: FLASK_ENV
