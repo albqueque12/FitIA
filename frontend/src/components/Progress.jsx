@@ -3,18 +3,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress as ProgressBar } from '@/components/ui/progress.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
 import { Alert, AlertDescription } from '@/components/ui/alert.jsx'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
-import { TrendingUp, Target, Calendar, Activity, Clock, Zap } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { TrendingUp, Calendar, Activity, Target, Award, Zap } from 'lucide-react'
 import { API_BASE_URL } from '../config'
+import { useRefresh } from '../context/RefreshContext'
 
 const Progress = ({ user }) => {
   const [progress, setProgress] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { refreshTrigger } = useRefresh()
 
   useEffect(() => {
     fetchProgress()
-  }, [user])
+  }, [user, refreshTrigger])
 
   const fetchProgress = async () => {
     try {

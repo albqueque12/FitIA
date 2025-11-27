@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx'
 import { Activity, Target, Calendar, TrendingUp, User, Settings, Moon, Sun } from 'lucide-react'
 import { ThemeProvider, useTheme } from '../context/ThemeContext'
+import { RefreshProvider } from '../context/RefreshContext'
 import UserRegistration from './UserRegistration'
 import Dashboard from './Dashboard'
 import TrainingPlan from './TrainingPlain'
@@ -198,7 +199,9 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <RefreshProvider>
+        <AppContent />
+      </RefreshProvider>
     </ThemeProvider>
   )
 }

@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea.jsx'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.jsx'
 import { Calendar, Play, CheckCircle, Clock, Target, Plus, MessageSquare } from 'lucide-react'
 import { API_BASE_URL } from '../config'
+import { useRefresh } from '../context/RefreshContext'
 
 const TrainingPlan = ({ user }) => {
   const [trainingPlans, setTrainingPlans] = useState([])
@@ -27,6 +28,7 @@ const TrainingPlan = ({ user }) => {
     fc_medio: '',
     observacoes: ''
   })
+  const { triggerRefresh } = useRefresh()
 
   useEffect(() => {
     fetchTrainingPlans()
@@ -92,6 +94,9 @@ const TrainingPlan = ({ user }) => {
       
       // Recarregar planos para mostrar treino completado
       await fetchTrainingPlans()
+      
+      // Triggar refresh no Dashboard e Progress
+      triggerRefresh()
       
       return true
       

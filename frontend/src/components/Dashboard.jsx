@@ -6,15 +6,19 @@ import { Badge } from '@/components/ui/badge.jsx'
 import { Alert, AlertDescription } from '@/components/ui/alert.jsx'
 import { Target, Calendar, TrendingUp, Clock, Activity, Zap } from 'lucide-react'
 import { API_BASE_URL } from '../config'
+import { useRefresh } from '../context/RefreshContext'
 
 const Dashboard = ({ user }) => {
   const [progress, setProgress] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { refreshTrigger } = useRefresh()
 
   useEffect(() => {
     fetchProgress()
-  }, [user])
+  }, [user, refreshTrigger])
+
+  // Remover o listener de visibilitychange, não é mais necessário
 
   const fetchProgress = async () => {
     try {
