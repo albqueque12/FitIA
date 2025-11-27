@@ -81,7 +81,8 @@ const UserRegistration = ({ onUserCreated }) => {
       })
 
       if (!response.ok) {
-        throw new Error('Erro ao criar usuário')
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Erro ao criar usuário')
       }
 
       const result = await response.json()

@@ -331,12 +331,12 @@ const TrainingPlan = ({ user }) => {
                               </DialogHeader>
                               <div className="space-y-4">
                                 <div>
-                                  <Label>Esforço Percebido (1-10)</Label>
+                                  <Label htmlFor="rpe_completar">Esforço Percebido (1-10)</Label>
                                   <Select 
                                     value={completionData.rpe_realizado} 
                                     onValueChange={(value) => setCompletionData(prev => ({...prev, rpe_realizado: value}))}
                                   >
-                                    <SelectTrigger>
+                                    <SelectTrigger id="rpe_completar">
                                       <SelectValue placeholder="Selecione" />
                                     </SelectTrigger>
                                     <SelectContent>
