@@ -1,4 +1,4 @@
-# FitAI - Treinos Personalizados com IA 🏃‍♂️
+# FiTAI - Treinos Personalizados com IA 🏃‍♂️
 
 > Aplicação revolucionária de fitness que utiliza Inteligência Artificial para gerar treinos personalizados e adaptativos.
 
