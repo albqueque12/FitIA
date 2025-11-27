@@ -196,18 +196,18 @@ Contribuições são bem-vindas! Por favor:
 ## 📊 Roadmap
 
 ### ✅ Fase 1: MVP (Concluído)
-- [x] Backend Flask com API REST
-- [x] Frontend React responsivo
-- [x] Sistema de IA adaptativo
-- [x] Dashboard e estatísticas
-- [x] Sistema de feedback
-- [x] Estrutura para deploy
+- ✅ Backend Flask com API REST
+- ✅ Frontend React responsivo
+- ✅ Sistema de IA adaptativo
+- ✅ Dashboard e estatísticas
+- ✅ Sistema de feedback
+- ✅ Estrutura para deploy
 
 ### 🔄 Fase 2: Produção (Em Andamento)
-- [x] Estruturação do projeto
-- [x] Dockerização
-- [x] Configuração para deploy
-- [ ] Testes automatizados
+- ✅ Estruturação do projeto
+- ✅ Dockerização
+- ✅ Configuração para deploy
+- ✅ Testes automatizados
 - [ ] CI/CD pipeline
 - [ ] Monitoramento e logging
 - [ ] Deploy em produção
