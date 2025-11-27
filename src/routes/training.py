@@ -1,11 +1,25 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_from_directory
 from src.models.user import User, TrainingPlan, Workout, UserFeedback, UserExam, db
 from src.services.training_ai import TrainingAIService
 from datetime import datetime
+from werkzeug.utils import secure_filename
 import json
+import os
+import uuid
 
 training_bp = Blueprint('training', __name__)
 ai_service = TrainingAIService()
+
+# Configuração para upload de PDFs
+UPLOAD_FOLDER = 'uploads/exams'
+ALLOWED_EXTENSIONS = {'pdf'}
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+
+# Criar pasta de uploads se não existir
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @training_bp.route('/users', methods=['POST'])
 def create_user():
@@ -199,6 +213,7 @@ def add_user_exam(user_id):
             user_id=user_id,
             tipo_exame=data['tipo_exame'],
             dados_exame=json.dumps(data['dados_exame']),
+            pdf_filename=None,  # Sem PDF quando preenchido manualmente
             data_exame=datetime.fromisoformat(data['data_exame'])
         )
         
@@ -224,6 +239,74 @@ def get_user_exams(user_id):
         'user_id': user_id,
         'exams': [exam.to_dict() for exam in exams]
     })
+
+@training_bp.route('/users/<int:user_id>/exams/upload-pdf', methods=['POST'])
+def upload_exam_pdf(user_id):
+    """Upload de PDF de exame médico"""
+    try:
+        user = User.query.get_or_404(user_id)
+        
+        # Verificar se arquivo foi enviado
+        if 'pdf_file' not in request.files:
+            return jsonify({'error': 'Nenhum arquivo PDF enviado'}), 400
+        
+        file = request.files['pdf_file']
+        
+        if file.filename == '':
+            return jsonify({'error': 'Nenhum arquivo selecionado'}), 400
+        
+        if not allowed_file(file.filename):
+            return jsonify({'error': 'Apenas arquivos PDF são permitidos'}), 400
+        
+        # Gerar nome único para o arquivo
+        filename = secure_filename(file.filename)
+        unique_filename = f"{user_id}_{uuid.uuid4().hex}_{filename}"
+        filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
+        
+        # Salvar arquivo
+        file.save(filepath)
+        
+        # Obter dados do formulário
+        tipo_exame = request.form.get('tipo_exame', 'bioimpedancia')
+        data_exame = request.form.get('data_exame', datetime.now().isoformat())
+        
+        # Criar registro no banco
+        exam = UserExam(
+            user_id=user_id,
+            tipo_exame=tipo_exame,
+            dados_exame=json.dumps({}),  # Vazio, pois os dados estão no PDF
+            pdf_filename=unique_filename,
+            data_exame=datetime.fromisoformat(data_exame.split('T')[0])
+        )
+        
+        db.session.add(exam)
+        db.session.commit()
+        
+        return jsonify({
+            'exam': exam.to_dict(),
+            'message': 'PDF do exame enviado com sucesso!'
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        # Remover arquivo se houver erro
+        if 'filepath' in locals() and os.path.exists(filepath):
+            os.remove(filepath)
+        return jsonify({'error': str(e)}), 500
+
+@training_bp.route('/exams/pdf/<filename>', methods=['GET'])
+def download_exam_pdf(filename):
+    """Download de PDF de exame"""
+    try:
+        # Validar que o arquivo existe e pertence a um exame válido
+        exam = UserExam.query.filter_by(pdf_filename=filename).first()
+        if not exam:
+            return jsonify({'error': 'Arquivo não encontrado'}), 404
+        
+        return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @training_bp.route('/users/<int:user_id>/progress', methods=['GET'])
 def get_user_progress(user_id):

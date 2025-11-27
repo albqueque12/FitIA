@@ -15,16 +15,20 @@ import {
   AlertCircle,
   TrendingUp,
   Heart,
-  Zap
+  Zap,
+  FileText,
+  Download
 } from 'lucide-react'
 import { API_BASE_URL } from '../config'
 
 const MedicalExams = ({ user }) => {
   const [exams, setExams] = useState([])
   const [loading, setLoading] = useState(false)
+  const [uploadingPdf, setUploadingPdf] = useState(false)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
   const [activeExamType, setActiveExamType] = useState('bioimpedancia')
+  const [selectedPdfFile, setSelectedPdfFile] = useState(null)
 
   // Form states para cada tipo de exame
   const [bioimpedanciaData, setBioimpedanciaData] = useState({
@@ -224,6 +228,68 @@ const MedicalExams = ({ user }) => {
     }
   }
 
+  const handlePdfUpload = async (e) => {
+    e.preventDefault()
+    
+    if (!selectedPdfFile) {
+      setError('Por favor, selecione um arquivo PDF')
+      return
+    }
+
+    setUploadingPdf(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const formData = new FormData()
+      formData.append('pdf_file', selectedPdfFile)
+      formData.append('tipo_exame', activeExamType)
+      formData.append('data_exame', new Date().toISOString().split('T')[0])
+
+      const response = await fetch(`${API_BASE_URL}/users/${user.user.id}/exams/upload-pdf`, {
+        method: 'POST',
+        body: formData // Não definir Content-Type, FormData faz automaticamente
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Erro ao fazer upload do PDF')
+      }
+
+      const data = await response.json()
+      setSuccess(`PDF do exame de ${getExamLabel(activeExamType)} enviado com sucesso!`)
+      await fetchExams()
+      setSelectedPdfFile(null)
+      
+      // Reset file input
+      const fileInput = document.getElementById('pdf-upload')
+      if (fileInput) fileInput.value = ''
+
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setUploadingPdf(false)
+    }
+  }
+
+  const handlePdfFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        setError('Por favor, selecione apenas arquivos PDF')
+        e.target.value = ''
+        return
+      }
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        setError('Arquivo muito grande. Máximo 10MB')
+        e.target.value = ''
+        return
+      }
+      setSelectedPdfFile(file)
+      setError('')
+    }
+  }
+
   const getExamIcon = (tipo) => {
     switch (tipo) {
       case 'bioimpedancia': return <Scale className="h-5 w-5" />
@@ -273,7 +339,7 @@ const MedicalExams = ({ user }) => {
           <CardHeader>
             <CardTitle>Cadastrar Novo Exame</CardTitle>
             <CardDescription>
-              Escolha o tipo de exame e preencha os dados
+              Preencha os dados manualmente ou faça upload do PDF do exame
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -292,6 +358,46 @@ const MedicalExams = ({ user }) => {
                   VO2
                 </TabsTrigger>
               </TabsList>
+
+              {/* Seção de Upload de PDF - Aparece em todas as tabs */}
+              <div className="mt-4 mb-6 p-4 border rounded-lg bg-accent/50">
+                <h4 className="text-sm font-semibold mb-3 flex items-center">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Upload de PDF do Exame
+                </h4>
+                <form onSubmit={handlePdfUpload} className="space-y-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="pdf-upload" className="text-sm">
+                      Selecione o PDF do exame de {getExamLabel(activeExamType)}
+                    </Label>
+                    <Input
+                      id="pdf-upload"
+                      type="file"
+                      accept=".pdf"
+                      onChange={handlePdfFileChange}
+                      className="cursor-pointer"
+                    />
+                    {selectedPdfFile && (
+                      <p className="text-xs text-muted-foreground flex items-center gap-2">
+                        <FileText className="h-3 w-3" />
+                        {selectedPdfFile.name} ({(selectedPdfFile.size / 1024).toFixed(1)} KB)
+                      </p>
+                    )}
+                  </div>
+                  <Button 
+                    type="submit" 
+                    variant="outline" 
+                    className="w-full"
+                    disabled={uploadingPdf || !selectedPdfFile}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    {uploadingPdf ? 'Enviando PDF...' : 'Enviar PDF'}
+                  </Button>
+                </form>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Ou preencha os dados manualmente abaixo
+                </p>
+              </div>
 
               {/* Bioimpedância */}
               <TabsContent value="bioimpedancia">
@@ -593,22 +699,46 @@ const MedicalExams = ({ user }) => {
                       <div className="flex items-center gap-2">
                         {getExamIcon(exam.tipo_exame)}
                         <span className="font-semibold">{getExamLabel(exam.tipo_exame)}</span>
+                        {exam.pdf_filename && (
+                          <Badge variant="secondary" className="text-xs">
+                            <FileText className="h-3 w-3 mr-1" />
+                            PDF
+                          </Badge>
+                        )}
                       </div>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(exam.data_exame).toLocaleDateString('pt-BR')}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(exam.data_exame).toLocaleDateString('pt-BR')}
+                        </span>
+                        {exam.pdf_filename && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => window.open(`${API_BASE_URL}/exams/pdf/${exam.pdf_filename}`, '_blank')}
+                            title="Baixar PDF"
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      {Object.entries(exam.dados_exame).map(([key, value]) => (
-                        <div key={key}>
-                          <span className="text-muted-foreground capitalize">
-                            {key.replace(/_/g, ' ')}:
-                          </span>{' '}
-                          <span className="font-medium">{value}</span>
-                        </div>
-                      ))}
-                    </div>
+                    {exam.dados_exame && Object.keys(exam.dados_exame).length > 0 ? (
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        {Object.entries(exam.dados_exame).map(([key, value]) => (
+                          <div key={key}>
+                            <span className="text-muted-foreground capitalize">
+                              {key.replace(/_/g, ' ')}:
+                            </span>{' '}
+                            <span className="font-medium">{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">
+                        Exame enviado via PDF - dados não preenchidos manualmente
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>

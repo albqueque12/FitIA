@@ -144,7 +144,8 @@ class UserExam(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     tipo_exame = db.Column(db.String(50), nullable=False)  # 'bioimpedancia', 'espirometria', 'vo2max'
-    dados_exame = db.Column(db.Text, nullable=False)  # JSON com os dados do exame
+    dados_exame = db.Column(db.Text, nullable=True)  # JSON com os dados do exame (opcional se tiver PDF)
+    pdf_filename = db.Column(db.String(255), nullable=True)  # Nome do arquivo PDF armazenado
     data_exame = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -154,6 +155,7 @@ class UserExam(db.Model):
             'user_id': self.user_id,
             'tipo_exame': self.tipo_exame,
             'dados_exame': json.loads(self.dados_exame) if self.dados_exame else {},
+            'pdf_filename': self.pdf_filename,
             'data_exame': self.data_exame.isoformat() if self.data_exame else None,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
