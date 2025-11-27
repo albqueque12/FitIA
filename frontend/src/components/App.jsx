@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx'
-import { Activity, Target, Calendar, TrendingUp, User, Settings, Moon, Sun } from 'lucide-react'
+import { Activity, Target, Calendar, TrendingUp, User, Settings, Moon, Sun, MessageSquare, Stethoscope } from 'lucide-react'
 import { ThemeProvider, useTheme } from '../context/ThemeContext'
 import { RefreshProvider } from '../context/RefreshContext'
 import UserRegistration from './UserRegistration'
 import Dashboard from './Dashboard'
 import TrainingPlan from './TrainingPlain'
 import Progress from './Progress'
+import WeeklyFeedback from './WeeklyFeedback'
+import MedicalExams from './MedicalExams'
 import '../App.css'
 
 function AppContent() {
@@ -112,7 +114,7 @@ function AppContent() {
       <div className="bg-card border-b">
         <div className="container mx-auto px-4">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-4">
+            <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:grid-cols-6">
               <TabsTrigger value="dashboard" className="flex items-center">
                 <Target className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Dashboard</span>
@@ -124,6 +126,14 @@ function AppContent() {
               <TabsTrigger value="progress" className="flex items-center">
                 <TrendingUp className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Progresso</span>
+              </TabsTrigger>
+              <TabsTrigger value="feedback" className="flex items-center">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Feedback</span>
+              </TabsTrigger>
+              <TabsTrigger value="exams" className="flex items-center">
+                <Stethoscope className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Exames</span>
               </TabsTrigger>
               <TabsTrigger value="profile" className="flex items-center">
                 <User className="h-4 w-4 mr-2" />
@@ -140,6 +150,12 @@ function AppContent() {
               </TabsContent>
               <TabsContent value="progress" className="mt-0">
                 <Progress user={user} />
+              </TabsContent>
+              <TabsContent value="feedback" className="mt-0">
+                <WeeklyFeedback user={user} />
+              </TabsContent>
+              <TabsContent value="exams" className="mt-0">
+                <MedicalExams user={user} />
               </TabsContent>
               <TabsContent value="profile" className="mt-0">
                 <Card>

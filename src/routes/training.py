@@ -80,6 +80,9 @@ def generate_training_plan(user_id, week_number):
                 'message': 'Plano já existe para esta semana'
             })
         
+        # Analisar exames médicos antes de gerar o plano
+        exam_adjustments = ai_service.analyze_medical_exams(user_id)
+        
         # Gerar novo plano
         training_plan = ai_service.generate_weekly_plan(user_id, week_number)
         
@@ -88,6 +91,7 @@ def generate_training_plan(user_id, week_number):
         
         return jsonify({
             'training_plan': training_plan.to_dict(),
+            'exam_adjustments': exam_adjustments,
             'message': 'Plano de treino gerado com sucesso!'
         }), 201
         
@@ -159,6 +163,25 @@ def submit_feedback(user_id):
         
     except Exception as e:
         db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@training_bp.route('/users/<int:user_id>/feedback', methods=['GET'])
+def get_user_feedbacks(user_id):
+    """Retorna histórico de feedbacks do usuário"""
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'Usuário não encontrado'}), 404
+        
+        feedbacks = UserFeedback.query.filter_by(user_id=user_id).order_by(UserFeedback.semana.asc()).all()
+        
+        return jsonify({
+            'feedbacks': [f.to_dict() for f in feedbacks],
+            'total': len(feedbacks),
+            'current_performance_factor': user.performance_factor
+        })
+        
+    except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @training_bp.route('/users/<int:user_id>/exams', methods=['POST'])

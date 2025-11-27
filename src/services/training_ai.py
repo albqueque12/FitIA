@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import random
 from datetime import datetime, timedelta
-from src.models.user import User, TrainingPlan, Workout, UserFeedback, db
+from src.models.user import User, TrainingPlan, Workout, UserFeedback, UserExam, db
 
 class TrainingAIService:
     def __init__(self):
@@ -284,9 +284,130 @@ class TrainingAIService:
         
         return user.performance_factor
     
+    def analyze_medical_exams(self, user_id):
+        """Analisa exames médicos para ajustar treinos"""
+        # Buscar exames mais recentes de cada tipo
+        bioimpedancia = UserExam.query.filter_by(
+            user_id=user_id, 
+            tipo_exame='bioimpedancia'
+        ).order_by(UserExam.data_exame.desc()).first()
+        
+        espirometria = UserExam.query.filter_by(
+            user_id=user_id, 
+            tipo_exame='espirometria'
+        ).order_by(UserExam.data_exame.desc()).first()
+        
+        vo2max = UserExam.query.filter_by(
+            user_id=user_id, 
+            tipo_exame='vo2max'
+        ).order_by(UserExam.data_exame.desc()).first()
+        
+        adjustments = {
+            'volume_factor': 1.0,
+            'intensity_factor': 1.0,
+            'recovery_factor': 1.0,
+            'recommendations': []
+        }
+        
+        # Análise de Bioimpedância
+        if bioimpedancia:
+            import json
+            dados = json.loads(bioimpedancia.dados_exame) if isinstance(bioimpedancia.dados_exame, str) else bioimpedancia.dados_exame
+            
+            # Percentual de gordura - ajusta volume e recuperação
+            perc_gordura = dados.get('percentual_gordura', 0)
+            if perc_gordura > 25:  # Acima do ideal para corredores
+                adjustments['volume_factor'] *= 0.9
+                adjustments['recovery_factor'] *= 1.1
+                adjustments['recommendations'].append(
+                    "Alto % de gordura corporal. Reduzindo volume e aumentando recuperação."
+                )
+            elif perc_gordura < 10:  # Muito baixo - cuidado com overtraining
+                adjustments['recovery_factor'] *= 1.15
+                adjustments['recommendations'].append(
+                    "Baixo % de gordura. Aumentando tempo de recuperação para prevenir lesões."
+                )
+            
+            # Taxa Metabólica Basal - influencia capacidade de treino
+            tmb = dados.get('taxa_metabolica_basal', 0)
+            if tmb < 1500:
+                adjustments['volume_factor'] *= 0.95
+                adjustments['recommendations'].append(
+                    "TMB baixa. Reduzindo volume de treino e focando em qualidade."
+                )
+        
+        # Análise de Espirometria
+        if espirometria:
+            import json
+            dados = json.loads(espirometria.dados_exame) if isinstance(espirometria.dados_exame, str) else espirometria.dados_exame
+            
+            # Relação VEF1/CVF - indica função pulmonar
+            relacao = dados.get('relacao_vef1_cvf', 100)
+            if relacao < 70:  # Possível obstrução
+                adjustments['intensity_factor'] *= 0.85
+                adjustments['recommendations'].append(
+                    "Relação VEF1/CVF baixa. Reduzindo intensidade de treinos anaeróbicos."
+                )
+            elif relacao > 90:  # Excelente função pulmonar
+                adjustments['intensity_factor'] *= 1.05
+                adjustments['recommendations'].append(
+                    "Excelente função pulmonar. Pode trabalhar com intensidades mais altas."
+                )
+        
+        # Análise de VO2 Máx
+        if vo2max:
+            import json
+            dados = json.loads(vo2max.dados_exame) if isinstance(vo2max.dados_exame, str) else vo2max.dados_exame
+            
+            vo2_value = dados.get('vo2max', 0)
+            
+            # Classificação VO2 máx (ml/kg/min)
+            if vo2_value < 35:  # Baixo
+                adjustments['volume_factor'] *= 0.9
+                adjustments['intensity_factor'] *= 0.9
+                adjustments['recommendations'].append(
+                    f"VO2 máx baixo ({vo2_value:.1f}). Focando em base aeróbica antes de intensidade."
+                )
+            elif vo2_value > 55:  # Excelente
+                adjustments['volume_factor'] *= 1.1
+                adjustments['intensity_factor'] *= 1.1
+                adjustments['recommendations'].append(
+                    f"VO2 máx excelente ({vo2_value:.1f}). Aumentando volume e intensidade de treino."
+                )
+            
+            # Usar limiares para zonas de treino precisas
+            limiar_anaerobico = dados.get('limiar_anaerobico', 0)
+            if limiar_anaerobico > 0:
+                # Calcular % do VO2max para limiar
+                limiar_percent = (limiar_anaerobico / vo2_value) * 100
+                adjustments['limiar_percent'] = limiar_percent
+                adjustments['recommendations'].append(
+                    f"Limiar anaeróbico em {limiar_percent:.0f}% do VO2max. Ajustando zonas de treino."
+                )
+        
+        return adjustments
+    
+    def apply_exam_adjustments(self, user_id, training_plan_data):
+        """Aplica ajustes baseados em exames médicos ao plano de treino"""
+        adjustments = self.analyze_medical_exams(user_id)
+        
+        # Ajustar volumes e intensidades
+        if 'volume_semanal' in training_plan_data:
+            training_plan_data['volume_semanal'] *= adjustments['volume_factor']
+        
+        if 'intensity_multiplier' in training_plan_data:
+            training_plan_data['intensity_multiplier'] *= adjustments['intensity_factor']
+        
+        # Adicionar recomendações ao plano
+        if adjustments['recommendations']:
+            training_plan_data['medical_recommendations'] = adjustments['recommendations']
+        
+        return training_plan_data, adjustments
+    
     def format_pace(self, pace_min_km):
         """Formata o ritmo no formato mm:ss"""
         minutes = int(pace_min_km)
         seconds = int((pace_min_km - minutes) * 60)
         return f"{minutes}:{seconds:02d}"
+
 
