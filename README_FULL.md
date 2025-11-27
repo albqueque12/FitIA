@@ -1,4 +1,4 @@
-# ExFit - Treinos Personalizados com IA 🏃‍♂️
+# FITAI - Treinos Personalizados com IA 🏃‍♂️
 
 [conteúdo anterior...]
 
