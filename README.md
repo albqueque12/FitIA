@@ -267,16 +267,16 @@ Contribuições são bem-vindas! Por favor:
 
 ## 👥 Time
 
-- **Backend & IA**: [Seu nome]
-- **Frontend**: [Seu nome]
-- **DevOps**: [Seu nome]
+- **Backend & IA**: [Lucas Leontino]
+- **Frontend**: [Lucas Leontino]
+- **DevOps**: [Lucas Leontino]
 
 ## 📞 Contato
 
 - **Website**: [seu-website.com]
-- **Email**: fitia@exemplo.com
+- **Email**: expertdivision@gmail.com
 - **GitHub**: [@albqueque12](https://github.com/albqueque12)
-- **LinkedIn**: [Seu LinkedIn]
+- **LinkedIn**: [https://www.linkedin.com/in/lucas-leontino-da-silva-pereira-837513217/]
 
 ## 📜 Licença
 
@@ -288,6 +288,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 **Desenvolvido com ❤️ para revolucionar o fitness com IA**
 
-[⬆ Voltar ao topo](#exfit---treinos-personalizados-com-ia-)
+[⬆ Voltar ao topo](#fitai---treinos-personalizados-com-ia-)
 
 </div>
