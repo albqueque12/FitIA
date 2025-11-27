@@ -5,17 +5,39 @@ const Select = ({ children, value, onValueChange }) => {
   const [isOpen, setIsOpen] = React.useState(false)
   const [selectedValue, setSelectedValue] = React.useState(value)
 
+  // Sincronizar quando o value externo mudar
+  React.useEffect(() => {
+    setSelectedValue(value)
+  }, [value])
+
   const handleSelect = (newValue) => {
     setSelectedValue(newValue)
     if (onValueChange) onValueChange(newValue)
     setIsOpen(false)
   }
 
+  // Encontrar o label do item selecionado
+  let selectedLabel = null
+  React.Children.forEach(children, (child) => {
+    if (child.type === SelectContent) {
+      React.Children.forEach(child.props.children, (item) => {
+        if (item.props.value === selectedValue) {
+          selectedLabel = item.props.children
+        }
+      })
+    }
+  })
+
   return (
     <div className="relative">
       {React.Children.map(children, (child) => {
         if (child.type === SelectTrigger) {
-          return React.cloneElement(child, { onClick: () => setIsOpen(!isOpen), selectedValue, isOpen })
+          return React.cloneElement(child, { 
+            onClick: () => setIsOpen(!isOpen), 
+            selectedValue, 
+            selectedLabel,
+            isOpen 
+          })
         }
         if (child.type === SelectContent && isOpen) {
           return React.cloneElement(child, { onSelect: handleSelect, onClose: () => setIsOpen(false) })
@@ -26,7 +48,7 @@ const Select = ({ children, value, onValueChange }) => {
   )
 }
 
-const SelectTrigger = React.forwardRef(({ className, children, onClick, selectedValue, isOpen, ...props }, ref) => (
+const SelectTrigger = React.forwardRef(({ className, children, onClick, selectedValue, selectedLabel, isOpen, ...props }, ref) => (
   <button
     ref={ref}
     type="button"
@@ -37,13 +59,18 @@ const SelectTrigger = React.forwardRef(({ className, children, onClick, selected
     onClick={onClick}
     {...props}
   >
-    {children}
+    {React.Children.map(children, (child) => {
+      if (child.type === SelectValue) {
+        return React.cloneElement(child, { selectedLabel })
+      }
+      return child
+    })}
   </button>
 ))
 SelectTrigger.displayName = "SelectTrigger"
 
-const SelectValue = ({ placeholder, ...props }) => {
-  return <span className="block truncate">{placeholder}</span>
+const SelectValue = ({ placeholder, selectedLabel, ...props }) => {
+  return <span className="block truncate">{selectedLabel || placeholder}</span>
 }
 SelectValue.displayName = "SelectValue"
 
