@@ -14,29 +14,22 @@ class TrainingAIService:
         }
     
     def calculate_training_paces(self, user_data):
-        """Calcula os ritmos de treino baseado no teste de 3km ou 5km e objetivo"""
-        # Priorizar teste de 3km, se não tiver usar 5km
-        if user_data.get('teste_3km_tempo'):
-            tempo_teste = user_data['teste_3km_tempo']
-            distancia_teste = 3
-        else:
-            tempo_teste = user_data['teste_5km_tempo']
-            distancia_teste = 5
-        
-        ritmo_teste = tempo_teste / distancia_teste  # min/km
+        """Calcula os ritmos de treino baseado no teste de 5km e objetivo"""
+        tempo_5km = user_data['teste_5km_tempo']
+        ritmo_5km = tempo_5km / 5  # min/km
         ritmo_objetivo = user_data['tempo_objetivo_min'] / user_data['distancia_objetivo']
         
         # Fórmula adaptativa baseada no objetivo
-        diff_factor = ritmo_objetivo / ritmo_teste
+        diff_factor = ritmo_objetivo / ritmo_5km
         
         # Ajustar fatores com base na diferença entre atual e objetivo
         if diff_factor > 1.2:
             # Objetivo muito mais lento que atual - iniciante
-            ritmo_facil = ritmo_teste * 1.15
-            ritmo_longo = ritmo_teste * 1.1
-            ritmo_tempo = ritmo_teste * 0.95
-            ritmo_intervalo = ritmo_teste * 0.85
-            ritmo_limiar = ritmo_teste * 0.9
+            ritmo_facil = ritmo_5km * 1.15
+            ritmo_longo = ritmo_5km * 1.1
+            ritmo_tempo = ritmo_5km * 0.95
+            ritmo_intervalo = ritmo_5km * 0.85
+            ritmo_limiar = ritmo_5km * 0.9
             ritmo_ritmo = ritmo_objetivo
         elif diff_factor < 0.9:
             # Objetivo mais rápido que atual - avançado
@@ -48,11 +41,11 @@ class TrainingAIService:
             ritmo_ritmo = ritmo_objetivo * 0.95
         else:
             # Objetivo próximo do atual
-            ritmo_facil = ritmo_teste * 1.2
-            ritmo_longo = ritmo_teste * 1.15
-            ritmo_tempo = ritmo_teste * 0.95
-            ritmo_intervalo = ritmo_teste * 0.85
-            ritmo_limiar = ritmo_teste * 0.9
+            ritmo_facil = ritmo_5km * 1.2
+            ritmo_longo = ritmo_5km * 1.15
+            ritmo_tempo = ritmo_5km * 0.95
+            ritmo_intervalo = ritmo_5km * 0.85
+            ritmo_limiar = ritmo_5km * 0.9
             ritmo_ritmo = ritmo_objetivo
         
         return {

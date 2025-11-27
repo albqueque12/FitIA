@@ -13,22 +13,16 @@ def create_user():
     try:
         data = request.get_json()
         
-        # Validar dados obrigatórios - aceita teste_3km ou teste_5km
-        required_base_fields = [
+        # Validar dados obrigatórios
+        required_fields = [
             'idade', 'peso', 'sexo', 'nivel', 'distancia_objetivo',
-            'tempo_objetivo_min', 'semanas_treino', 'dias_semana'
+            'tempo_objetivo_min', 'semanas_treino', 'dias_semana',
+            'teste_5km_tempo', 'teste_5km_fc_media', 'teste_5km_rpe'
         ]
         
-        for field in required_base_fields:
+        for field in required_fields:
             if field not in data:
                 return jsonify({'error': f'Campo obrigatório: {field}'}), 400
-        
-        # Verificar se tem teste_3km ou teste_5km
-        has_3km = all(f in data for f in ['teste_3km_tempo', 'teste_3km_fc_media', 'teste_3km_rpe'])
-        has_5km = all(f in data for f in ['teste_5km_tempo', 'teste_5km_fc_media', 'teste_5km_rpe'])
-        
-        if not has_3km and not has_5km:
-            return jsonify({'error': 'Necessário informar dados do teste de 3km ou 5km'}), 400
         
         # Criar usuário
         user = User(
@@ -39,19 +33,11 @@ def create_user():
             distancia_objetivo=data['distancia_objetivo'],
             tempo_objetivo_min=data['tempo_objetivo_min'],
             semanas_treino=data['semanas_treino'],
-            dias_semana=data['dias_semana']
+            dias_semana=data['dias_semana'],
+            teste_5km_tempo=data['teste_5km_tempo'],
+            teste_5km_fc_media=data['teste_5km_fc_media'],
+            teste_5km_rpe=data['teste_5km_rpe']
         )
-        
-        # Adicionar dados de teste (3km ou 5km)
-        if has_3km:
-            user.teste_3km_tempo = data['teste_3km_tempo']
-            user.teste_3km_fc_media = data['teste_3km_fc_media']
-            user.teste_3km_rpe = data['teste_3km_rpe']
-        
-        if has_5km:
-            user.teste_5km_tempo = data['teste_5km_tempo']
-            user.teste_5km_fc_media = data['teste_5km_fc_media']
-            user.teste_5km_rpe = data['teste_5km_rpe']
         
         db.session.add(user)
         db.session.commit()

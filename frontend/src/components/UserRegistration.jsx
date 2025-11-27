@@ -20,9 +20,9 @@ const UserRegistration = ({ onUserCreated }) => {
     tempo_objetivo_minutos: '',
     semanas_treino: '',
     dias_semana: '',
-    teste_3km_tempo: '',
-    teste_3km_fc_media: '',
-    teste_3km_rpe: ''
+    teste_5km_tempo: '',
+    teste_5km_fc_media: '',
+    teste_5km_rpe: ''
   })
   
   const [loading, setLoading] = useState(false)
@@ -46,7 +46,7 @@ const UserRegistration = ({ onUserCreated }) => {
   }
 
   const validateStep3 = () => {
-    return formData.teste_3km_tempo && formData.teste_3km_fc_media && formData.teste_3km_rpe
+    return formData.teste_5km_tempo && formData.teste_5km_fc_media && formData.teste_5km_rpe
   }
 
   const handleSubmit = async (e) => {
@@ -67,9 +67,9 @@ const UserRegistration = ({ onUserCreated }) => {
         tempo_objetivo_min: tempo_objetivo_min,
         semanas_treino: parseInt(formData.semanas_treino),
         dias_semana: parseInt(formData.dias_semana),
-        teste_3km_tempo: parseFloat(formData.teste_3km_tempo),
-        teste_3km_fc_media: parseFloat(formData.teste_3km_fc_media),
-        teste_3km_rpe: parseInt(formData.teste_3km_rpe)
+        teste_5km_tempo: parseFloat(formData.teste_5km_tempo),
+        teste_5km_fc_media: parseFloat(formData.teste_5km_fc_media),
+        teste_5km_rpe: parseInt(formData.teste_5km_rpe)
       }
 
       const response = await fetch(`${API_BASE_URL}/users`, {
@@ -253,21 +253,21 @@ const UserRegistration = ({ onUserCreated }) => {
                 <Alert>
                   <Activity className="h-4 w-4" />
                   <AlertDescription>
-                    Para personalizar seus treinos, precisamos de dados do seu teste de 3km. 
-                    Se você não fez recentemente, faça uma corrida de 3km no seu ritmo confortável.
+                    Para personalizar seus treinos, precisamos de dados do seu teste de 5km. 
+                    Se você não fez recentemente, faça uma corrida de 5km no seu ritmo confortável.
                   </AlertDescription>
                 </Alert>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label htmlFor="tempo_3km">Tempo 3km (minutos)</Label>
+                    <Label htmlFor="tempo_5km">Tempo 5km (minutos)</Label>
                     <Input
-                      id="tempo_3km"
+                      id="tempo_5km"
                       type="number"
                       step="0.1"
-                      placeholder="Ex: 15.5"
-                      value={formData.teste_3km_tempo}
-                      onChange={(e) => handleInputChange('teste_3km_tempo', e.target.value)}
+                      placeholder="Ex: 25.5"
+                      value={formData.teste_5km_tempo}
+                      onChange={(e) => handleInputChange('teste_5km_tempo', e.target.value)}
                       required
                     />
                   </div>
@@ -277,14 +277,14 @@ const UserRegistration = ({ onUserCreated }) => {
                       id="fc_media"
                       type="number"
                       placeholder="Ex: 165"
-                      value={formData.teste_3km_fc_media}
-                      onChange={(e) => handleInputChange('teste_3km_fc_media', e.target.value)}
+                      value={formData.teste_5km_fc_media}
+                      onChange={(e) => handleInputChange('teste_5km_fc_media', e.target.value)}
                       required
                     />
                   </div>
                   <div>
                     <Label htmlFor="rpe">Esforço Percebido (1-10)</Label>
-                    <Select value={formData.teste_3km_rpe} onValueChange={(value) => handleInputChange('teste_3km_rpe', value)}>
+                    <Select value={formData.teste_5km_rpe} onValueChange={(value) => handleInputChange('teste_5km_rpe', value)}>
                       <SelectTrigger id="rpe">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>

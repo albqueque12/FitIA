@@ -16,12 +16,9 @@ class User(db.Model):
     tempo_objetivo_min = db.Column(db.Integer, nullable=False)
     semanas_treino = db.Column(db.Integer, nullable=False)
     dias_semana = db.Column(db.Integer, nullable=False)
-    teste_5km_tempo = db.Column(db.Float, nullable=True)  # Manter para compatibilidade
-    teste_5km_fc_media = db.Column(db.Float, nullable=True)
-    teste_5km_rpe = db.Column(db.Integer, nullable=True)
-    teste_3km_tempo = db.Column(db.Float, nullable=True)
-    teste_3km_fc_media = db.Column(db.Float, nullable=True)
-    teste_3km_rpe = db.Column(db.Integer, nullable=True)
+    teste_5km_tempo = db.Column(db.Float, nullable=False)
+    teste_5km_fc_media = db.Column(db.Float, nullable=False)
+    teste_5km_rpe = db.Column(db.Integer, nullable=False)
     performance_factor = db.Column(db.Float, default=1.0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -43,9 +40,6 @@ class User(db.Model):
             'teste_5km_tempo': self.teste_5km_tempo,
             'teste_5km_fc_media': self.teste_5km_fc_media,
             'teste_5km_rpe': self.teste_5km_rpe,
-            'teste_3km_tempo': self.teste_3km_tempo,
-            'teste_3km_fc_media': self.teste_3km_fc_media,
-            'teste_3km_rpe': self.teste_3km_rpe,
             'performance_factor': self.performance_factor,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
