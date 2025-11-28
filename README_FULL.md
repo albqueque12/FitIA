@@ -5,36 +5,36 @@
 ## 📊 Roadmap
 
 ### ✅ Fase 1: MVP (Concluído)
-- [x] Backend Flask com API REST
-- [x] Frontend React responsivo
-- [x] Sistema de IA adaptativo
-- [x] Dashboard e estatísticas
-- [x] Sistema de feedback
-- [x] Estrutura para deploy
+- ✅ Backend Flask com API REST
+- ✅ Frontend React responsivo
+- ✅ Sistema de IA adaptativo
+- ✅ Dashboard e estatísticas
+- ✅ Sistema de feedback
+- ✅ Estrutura para deploy
 
 ### 🔄 Fase 2: Produção (Em Andamento)
-- [x] Estruturação do projeto
-- [x] Configuração para deploy
-- [x] Deploy em produção (Render.com)
-- [x] Dark mode completo
-- [x] Sistema de refresh automático
-- [ ] Testes automatizados
+- ✅ Estruturação do projeto
+- ✅ Configuração para deploy
+- ✅ Deploy em produção (Render.com)
+- ✅ Dark mode completo
+- ✅Sistema de refresh automático
+- ✅ Testes automatizados
 - [ ] CI/CD pipeline
 - [ ] Monitoramento e logging
 - [ ] Dockerização (opcional)
 
 ### ✅ Fase 3: Funcionalidades Avançadas (Concluído)
-- [x] Interface de Feedback Semanal
-  - [x] Formulário de feedback (consistência, RPE, FC)
-  - [x] Histórico de feedbacks
-  - [x] Visualização de performance_factor
-  - [x] Sistema adaptativo automático
-- [x] Integração de exames médicos
-  - [x] Bioimpedância corporal
-  - [x] Espirometria e função pulmonar
-  - [x] VO2 máx e limiares
-  - [x] Análise inteligente de exames
-  - [x] Ajuste automático de treinos baseado em dados científicos
+- ✅ Interface de Feedback Semanal
+  - ✅ Formulário de feedback (consistência, RPE, FC)
+  - ✅ Histórico de feedbacks
+  - ✅ Visualização de performance_factor
+  - ✅ Sistema adaptativo automático
+- ✅ Integração de exames médicos
+  - ✅ Bioimpedância corporal
+  - ✅ Espirometria e função pulmonar
+  - ✅ VO2 máx e limiares
+  - ✅ Análise inteligente de exames
+  - ✅ Ajuste automático de treinos baseado em dados científicos
 - [ ] Modelos de ML avançados
   - [ ] Prevenção de lesões
   - [ ] Análise de biotipo
