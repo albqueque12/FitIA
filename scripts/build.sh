@@ -25,6 +25,10 @@ fi
 npm run build
 cd ..
 
+# Executar migrações do banco de dados
+echo "🗄️  Executando migrações do banco de dados..."
+python migrate_add_pdf_filename.py
+
 echo "✅ Build concluído!"
 echo "   Arquivos estáticos em: ./static/"
 echo ""
