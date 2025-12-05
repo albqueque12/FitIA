@@ -82,6 +82,11 @@ def generate_training_plan(user_id, week_number):
     try:
         user = User.query.get_or_404(user_id)
         
+        # Validar dados do usuário
+        if not user.performance_factor:
+            user.performance_factor = 1.0
+            db.session.commit()
+        
         # Verificar se já existe plano para esta semana
         existing_plan = TrainingPlan.query.filter_by(
             user_id=user_id, 
@@ -101,7 +106,7 @@ def generate_training_plan(user_id, week_number):
         training_plan = ai_service.generate_weekly_plan(user_id, week_number)
         
         if not training_plan:
-            return jsonify({'error': 'Erro ao gerar plano de treino'}), 500
+            return jsonify({'error': 'Erro ao gerar plano de treino. Por favor, verifique os dados do usuário.'}), 500
         
         return jsonify({
             'training_plan': training_plan.to_dict(),
@@ -111,7 +116,10 @@ def generate_training_plan(user_id, week_number):
         
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        print(f"Erro ao gerar plano: {str(e)}")
+        print(traceback.format_exc())
+        return jsonify({'error': f'Erro ao gerar plano: {str(e)}'}), 500
 
 @training_bp.route('/users/<int:user_id>/training-plans', methods=['GET'])
 def get_user_training_plans(user_id):
