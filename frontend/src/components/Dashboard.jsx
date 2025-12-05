@@ -42,6 +42,9 @@ const Dashboard = ({ user }) => {
 
   const generateFirstWeekPlan = async () => {
     try {
+      console.log('Gerando plano para usuário:', user.user.id)
+      console.log('URL da API:', `${API_BASE_URL}/users/${user.user.id}/training-plan/1`)
+      
       const response = await fetch(`${API_BASE_URL}/users/${user.user.id}/training-plan/1`, {
         method: 'POST',
         headers: {
@@ -49,11 +52,16 @@ const Dashboard = ({ user }) => {
         },
       })
       
+      console.log('Status da resposta:', response.status)
+      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        console.error('Erro detalhado:', errorData)
+        console.error('Erro detalhado da API:', errorData)
         throw new Error(errorData.error || 'Erro ao gerar plano')
       }
+      
+      const data = await response.json()
+      console.log('Plano gerado com sucesso:', data)
       
       // Recarregar progresso após gerar plano
       await fetchProgress()
