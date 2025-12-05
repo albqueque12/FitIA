@@ -35,11 +35,51 @@ app.register_blueprint(training_bp, url_prefix='/api')
 # Inicializar banco de dados
 db.init_app(app)
 
+def run_migrations():
+    """Executa migrações necessárias no banco de dados"""
+    with app.app_context():
+        try:
+            from sqlalchemy import text
+            
+            # Detectar tipo de banco
+            db_url = str(db.engine.url)
+            is_sqlite = 'sqlite' in db_url
+            
+            with db.engine.connect() as conn:
+                # Verificar se coluna pdf_filename existe
+                if is_sqlite:
+                    result = conn.execute(text("PRAGMA table_info(user_exams)"))
+                    columns = [row[1] for row in result.fetchall()]
+                    column_exists = 'pdf_filename' in columns
+                else:
+                    # PostgreSQL
+                    result = conn.execute(text("""
+                        SELECT column_name 
+                        FROM information_schema.columns 
+                        WHERE table_name='user_exams' 
+                        AND column_name='pdf_filename'
+                    """))
+                    column_exists = result.fetchone() is not None
+                
+                if not column_exists:
+                    print("📊 Adicionando coluna pdf_filename...")
+                    conn.execute(text("""
+                        ALTER TABLE user_exams 
+                        ADD COLUMN pdf_filename VARCHAR(255)
+                    """))
+                    conn.commit()
+                    print("✅ Migração concluída!")
+        except Exception as e:
+            # Se der erro (ex: tabela não existe), criar todas as tabelas
+            print(f"⚠️  Criando/atualizando tabelas: {e}")
+            db.create_all()
+
 # Hook para criar banco de dados na primeira requisição
 @app.before_request
 def create_tables():
     try:
         db.create_all()
+        run_migrations()
     except Exception:
         pass  # Tabelas já existem
 

@@ -287,28 +287,34 @@ class TrainingAIService:
     
     def analyze_medical_exams(self, user_id):
         """Analisa exames médicos para ajustar treinos"""
-        # Buscar exames mais recentes de cada tipo
-        bioimpedancia = UserExam.query.filter_by(
-            user_id=user_id, 
-            tipo_exame='bioimpedancia'
-        ).order_by(UserExam.data_exame.desc()).first()
-        
-        espirometria = UserExam.query.filter_by(
-            user_id=user_id, 
-            tipo_exame='espirometria'
-        ).order_by(UserExam.data_exame.desc()).first()
-        
-        vo2max = UserExam.query.filter_by(
-            user_id=user_id, 
-            tipo_exame='vo2max'
-        ).order_by(UserExam.data_exame.desc()).first()
-        
         adjustments = {
             'volume_factor': 1.0,
             'intensity_factor': 1.0,
             'recovery_factor': 1.0,
             'recommendations': []
         }
+        
+        try:
+            # Buscar exames mais recentes de cada tipo
+            bioimpedancia = UserExam.query.filter_by(
+                user_id=user_id, 
+                tipo_exame='bioimpedancia'
+            ).order_by(UserExam.data_exame.desc()).first()
+            
+            espirometria = UserExam.query.filter_by(
+                user_id=user_id, 
+                tipo_exame='espirometria'
+            ).order_by(UserExam.data_exame.desc()).first()
+            
+            vo2max = UserExam.query.filter_by(
+                user_id=user_id, 
+                tipo_exame='vo2max'
+            ).order_by(UserExam.data_exame.desc()).first()
+        except Exception as e:
+            # Se houver erro ao consultar exames (ex: coluna não existe ainda),
+            # retornar ajustes padrão sem quebrar o fluxo
+            print(f"Aviso: Não foi possível analisar exames médicos: {e}")
+            return adjustments
         
         # Análise de Bioimpedância
         if bioimpedancia:
