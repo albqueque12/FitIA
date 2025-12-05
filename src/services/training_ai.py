@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import random
+import json
 from datetime import datetime, timedelta
 from src.models.user import User, TrainingPlan, Workout, UserFeedback, UserExam, db
 
@@ -311,7 +312,6 @@ class TrainingAIService:
         
         # Análise de Bioimpedância
         if bioimpedancia:
-            import json
             dados = json.loads(bioimpedancia.dados_exame) if isinstance(bioimpedancia.dados_exame, str) else bioimpedancia.dados_exame
             
             # Percentual de gordura - ajusta volume e recuperação
@@ -338,7 +338,6 @@ class TrainingAIService:
         
         # Análise de Espirometria
         if espirometria:
-            import json
             dados = json.loads(espirometria.dados_exame) if isinstance(espirometria.dados_exame, str) else espirometria.dados_exame
             
             # Relação VEF1/CVF - indica função pulmonar
@@ -356,7 +355,6 @@ class TrainingAIService:
         
         # Análise de VO2 Máx
         if vo2max:
-            import json
             dados = json.loads(vo2max.dados_exame) if isinstance(vo2max.dados_exame, str) else vo2max.dados_exame
             
             vo2_value = dados.get('vo2max', 0)
