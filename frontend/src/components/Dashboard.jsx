@@ -49,11 +49,17 @@ const Dashboard = ({ user }) => {
         },
       })
       
-      if (!response.ok) throw new Error('Erro ao gerar plano')
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('Erro detalhado:', errorData)
+        throw new Error(errorData.error || 'Erro ao gerar plano')
+      }
       
       // Recarregar progresso após gerar plano
-      fetchProgress()
+      await fetchProgress()
+      setError('') // Limpar erro se houver sucesso
     } catch (err) {
+      console.error('Erro ao gerar plano:', err)
       setError(err.message)
     }
   }
