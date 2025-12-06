@@ -93,10 +93,10 @@ const Dashboard = ({ user }) => {
         <CardContent>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-foreground">
                 {user.user.distancia_objetivo}km em {Math.floor(user.user.tempo_objetivo_min / 60)}h{user.user.tempo_objetivo_min % 60}min
               </p>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Ritmo objetivo: {formatPace(user.ritmos.ritmo_objetivo)}/km
               </p>
             </div>
@@ -114,7 +114,7 @@ const Dashboard = ({ user }) => {
             <div className="flex items-center">
               <Calendar className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Semanas Planejadas</p>
+                <p className="text-sm font-medium text-muted-foreground">Semanas Planejadas</p>
                 <p className="text-2xl font-bold">{progress?.statistics.total_plans || 0}</p>
               </div>
             </div>
@@ -126,7 +126,7 @@ const Dashboard = ({ user }) => {
             <div className="flex items-center">
               <Activity className="h-8 w-8 text-green-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Treinos Completos</p>
+                <p className="text-sm font-medium text-muted-foreground">Treinos Completos</p>
                 <p className="text-2xl font-bold">{progress?.statistics.completed_workouts || 0}</p>
               </div>
             </div>
@@ -138,7 +138,7 @@ const Dashboard = ({ user }) => {
             <div className="flex items-center">
               <TrendingUp className="h-8 w-8 text-purple-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Taxa de Conclusão</p>
+                <p className="text-sm font-medium text-muted-foreground">Taxa de Conclusão</p>
                 <p className="text-2xl font-bold">{Math.round(progress?.statistics.completion_rate || 0)}%</p>
               </div>
             </div>
@@ -150,7 +150,7 @@ const Dashboard = ({ user }) => {
             <div className="flex items-center">
               <Zap className="h-8 w-8 text-orange-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Performance</p>
+                <p className="text-sm font-medium text-muted-foreground">Performance</p>
                 <p className="text-2xl font-bold">{(user.user.performance_factor * 100).toFixed(0)}%</p>
               </div>
             </div>
@@ -168,7 +168,7 @@ const Dashboard = ({ user }) => {
         </CardHeader>
         <CardContent>
           <Progress value={progress?.statistics.progress_percentage || 0} className="w-full" />
-          <div className="flex justify-between text-sm text-gray-600 mt-2">
+          <div className="flex justify-between text-sm text-muted-foreground mt-2">
             <span>Semana 1</span>
             <span>Semana {user.user.semanas_treino}</span>
           </div>
@@ -232,10 +232,10 @@ const Dashboard = ({ user }) => {
           <CardContent>
             <div className="space-y-3">
               {progress.recent_feedback.slice(0, 3).map((feedback, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                   <div>
                     <p className="font-medium">Semana {feedback.semana}</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {feedback.consistencia} treinos • RPE médio: {feedback.rpe_medio}
                     </p>
                   </div>
