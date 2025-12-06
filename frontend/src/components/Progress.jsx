@@ -74,8 +74,8 @@ const Progress = ({ user }) => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Progresso e Estatísticas</h2>
-        <p className="text-gray-600">Acompanhe sua evolução e performance</p>
+        <h2 className="text-2xl font-bold text-foreground">Progresso e Estatísticas</h2>
+        <p className="text-muted-foreground">Acompanhe sua evolução e performance</p>
       </div>
 
       {/* Estatísticas Principais */}
@@ -85,7 +85,7 @@ const Progress = ({ user }) => {
             <div className="flex items-center">
               <Target className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Progresso Geral</p>
+                <p className="text-sm font-medium text-muted-foreground">Progresso Geral</p>
                 <p className={`text-2xl font-bold ${getProgressColor(progress?.statistics.progress_percentage)}`}>
                   {progress?.statistics.progress_percentage.toFixed(1)}%
                 </p>
@@ -99,7 +99,7 @@ const Progress = ({ user }) => {
             <div className="flex items-center">
               <Activity className="h-8 w-8 text-green-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Taxa de Conclusão</p>
+                <p className="text-sm font-medium text-muted-foreground">Taxa de Conclusão</p>
                 <p className="text-2xl font-bold text-green-900">
                   {Math.round(progress?.statistics.completion_rate || 0)}%
                 </p>
@@ -113,7 +113,7 @@ const Progress = ({ user }) => {
             <div className="flex items-center">
               <Calendar className="h-8 w-8 text-purple-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Semanas Ativas</p>
+                <p className="text-sm font-medium text-muted-foreground">Semanas Ativas</p>
                 <p className="text-2xl font-bold text-purple-900">
                   {progress?.statistics.total_plans || 0}
                 </p>
@@ -127,7 +127,7 @@ const Progress = ({ user }) => {
             <div className="flex items-center">
               <Zap className="h-8 w-8 text-orange-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Performance</p>
+                <p className="text-sm font-medium text-muted-foreground">Performance</p>
                 <Badge className={performanceStatus.color}>
                   {performanceStatus.status}
                 </Badge>
@@ -151,7 +151,7 @@ const Progress = ({ user }) => {
         <CardContent>
           <div className="space-y-4">
             <div>
-              <div className="flex justify-between text-sm text-gray-600 mb-2">
+              <div className="flex justify-between text-sm text-muted-foreground mb-2">
                 <span>Progresso do Plano</span>
                 <span>{progress?.statistics.progress_percentage.toFixed(1)}%</span>
               </div>
@@ -252,20 +252,20 @@ const Progress = ({ user }) => {
                   <div className="flex-1">
                     <div className="flex items-center space-x-4">
                       <Badge variant="outline">Semana {feedback.semana}</Badge>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         {feedback.consistencia}/{user.user.dias_semana} treinos
                       </span>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         RPE: {feedback.rpe_medio}
                       </span>
                       {feedback.fc_medio && (
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-muted-foreground">
                           FC: {feedback.fc_medio} bpm
                         </span>
                       )}
                     </div>
                     {feedback.observacoes && (
-                      <p className="text-sm text-gray-500 mt-2">
+                      <p className="text-sm text-muted-foreground mt-2">
                         "{feedback.observacoes}"
                       </p>
                     )}
@@ -299,14 +299,14 @@ const Progress = ({ user }) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
               <span className="font-medium">Fator de Performance Atual</span>
               <Badge className={performanceStatus.color}>
                 {(user.user.performance_factor * 100).toFixed(0)}%
               </Badge>
             </div>
             
-            <div className="text-sm text-gray-600 space-y-2">
+            <div className="text-sm text-muted-foreground space-y-2">
               {user.user.performance_factor > 1.1 && (
                 <p className="text-green-700 bg-green-50 p-2 rounded">
                   ✅ Excelente! Você está superando as expectativas. Continue assim!
