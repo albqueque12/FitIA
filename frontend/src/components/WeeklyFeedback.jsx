@@ -155,16 +155,16 @@ const WeeklyFeedback = ({ user }) => {
 
       {/* Alertas */}
       {success && (
-        <Alert className="border-green-500 bg-green-50">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">{success}</AlertDescription>
+        <Alert className="border-green-500 bg-green-50 dark:bg-green-950 dark:border-green-700">
+          <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+          <AlertDescription className="text-green-800 dark:text-green-200">{success}</AlertDescription>
         </Alert>
       )}
 
       {error && (
-        <Alert className="border-red-500 bg-red-50">
-          <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-800">{error}</AlertDescription>
+        <Alert className="border-red-500 bg-red-50 dark:bg-red-950 dark:border-red-700">
+          <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+          <AlertDescription className="text-red-800 dark:text-red-200">{error}</AlertDescription>
         </Alert>
       )}
 
