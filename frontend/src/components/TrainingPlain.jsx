@@ -163,7 +163,7 @@ const TrainingPlan = ({ user }) => {
       'intervalo': 'bg-pink-100 text-pink-800',
       'ritmo': 'bg-indigo-100 text-indigo-800'
     }
-    return colors[type] || 'bg-gray-100 text-gray-800'
+    return colors[type] || 'bg-muted text-muted-foreground'
   }
 
   const getPhaseColor = (phase) => {
@@ -173,7 +173,7 @@ const TrainingPlan = ({ user }) => {
       'intensificação': 'bg-red-100 text-red-800',
       'tapering': 'bg-purple-100 text-purple-800'
     }
-    return colors[phase] || 'bg-gray-100 text-gray-800'
+    return colors[phase] || 'bg-muted text-muted-foreground'
   }
 
   if (loading) {
@@ -189,8 +189,8 @@ const TrainingPlan = ({ user }) => {
       {/* Header com ações */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Planos de Treino</h2>
-          <p className="text-gray-600">Gerencie seus treinos semanais</p>
+          <h2 className="text-2xl font-bold text-foreground">Planos de Treino</h2>
+          <p className="text-muted-foreground">Gerencie seus treinos semanais</p>
         </div>
         <div className="flex space-x-2">
           <Dialog>
@@ -275,9 +275,9 @@ const TrainingPlan = ({ user }) => {
       {trainingPlans.length === 0 ? (
         <Card>
           <CardContent className="text-center py-8">
-            <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum plano criado ainda</h3>
-            <p className="text-gray-600 mb-4">Comece gerando seu primeiro plano de treino</p>
+            <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">Nenhum plano criado ainda</h3>
+            <p className="text-muted-foreground mb-4">Comece gerando seu primeiro plano de treino</p>
             <Button onClick={() => generateWeekPlan(1)}>
               <Plus className="h-4 w-4 mr-2" />
               Gerar Semana 1
@@ -322,11 +322,11 @@ const TrainingPlan = ({ user }) => {
                         </div>
                         <div className="space-y-1">
                           <p className="font-medium">Dia {workout.dia}</p>
-                          <p className="text-sm text-gray-600">{workout.distancia_km}km</p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-muted-foreground">{workout.distancia_km}km</p>
+                          <p className="text-sm text-muted-foreground">
                             Ritmo: {workout.ritmo_formatado}/km
                           </p>
-                          <p className="text-xs text-gray-500 line-clamp-2">
+                          <p className="text-xs text-muted-foreground line-clamp-2">
                             {workout.descricao}
                           </p>
                         </div>
@@ -399,9 +399,9 @@ const TrainingPlan = ({ user }) => {
                               </div>
                             </DialogContent>
                           </Dialog>
-                        )}
+                        )}}
                         {workout.completed && (
-                          <div className="mt-3 text-xs text-gray-500">
+                          <div className="mt-3 text-xs text-muted-foreground">
                             <p>RPE: {workout.rpe_realizado}</p>
                             <p>FC: {workout.fc_media} bpm</p>
                             <p>Tempo: {workout.tempo_realizado}min</p>
