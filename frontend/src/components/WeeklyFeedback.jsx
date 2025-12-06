@@ -121,7 +121,7 @@ const WeeklyFeedback = ({ user }) => {
   }
 
   const getPerformanceColor = (factor) => {
-    if (!factor) return 'bg-gray-500'
+    if (!factor) return 'bg-muted'
     if (factor >= 1.1) return 'bg-green-500'
     if (factor >= 0.95) return 'bg-blue-500'
     if (factor >= 0.85) return 'bg-yellow-500'

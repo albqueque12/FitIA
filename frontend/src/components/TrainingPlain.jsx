@@ -399,7 +399,7 @@ const TrainingPlan = ({ user }) => {
                               </div>
                             </DialogContent>
                           </Dialog>
-                        )}}
+                        )}
                         {workout.completed && (
                           <div className="mt-3 text-xs text-muted-foreground">
                             <p>RPE: {workout.rpe_realizado}</p>
